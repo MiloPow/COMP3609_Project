@@ -25,5 +25,14 @@ public class EnemyTracker {
         return enemyBounds;
 
     }
+
+    public boolean wasBossKilled(){
+        Enemy boss = eList.get(eList.size() - 1);
+        // return boss.getKilled();
+
+        Enemy3Boss b = (Enemy3Boss)boss;
+
+        return b.getKilled();
+    }
     
 }

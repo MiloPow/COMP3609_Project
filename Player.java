@@ -28,7 +28,7 @@ public class Player extends JPanel{
 
         this.x = x; this.y = y;
         width = 60; height = 40;
-        dx = 8; dy = 2;
+        dx = 3; dy = 3;
         health = 20;
 
         initBullets();
@@ -111,7 +111,7 @@ public class Player extends JPanel{
                 if((x + width) > 790)
                     x = 790 - width;
             }
-            /*else if(dir.equals("up")){
+            else if(dir.equals("up")){
                 y = y - dy;
                 if(y < 0)
                     y = 0;
@@ -120,7 +120,7 @@ public class Player extends JPanel{
                 y = y + dy;
                 if((y + height) > 560)
                     y = 560 - height;
-            }*/
+            }
         }
     }
 

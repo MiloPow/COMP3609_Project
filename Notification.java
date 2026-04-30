@@ -12,7 +12,6 @@ public class Notification extends JPanel{
     String text;
 
     public Notification(){
-        
         initialX = -10; initialY = 0;
         x = initialX; y = initialY;
         dy = 1; dir= -1;
@@ -29,7 +28,6 @@ public class Notification extends JPanel{
 
     public void activate(int x, int y){
         if(!isActive){
-            // this.x = x; this.y = y;
             spawnX = x; spawnY = y;
             this.x = spawnX; this.y = spawnY;
             isActive = true;

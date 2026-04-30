@@ -8,12 +8,11 @@ import javax.swing.JPanel;
 
 public class Enemy extends JPanel {
     
-    private int initialX, initialY ,dx = 1, dy;
-    protected int x, y, width, height, scoreValue, collHealthReduction, currHealth, maxHealth, collWithPlayerDamage, collWithBulletDamage;
-    private boolean isActive;
+    protected int initialX, initialY, x, y,dx = 1, dy, width, height, scoreValue, collHealthReduction, currHealth, maxHealth, collWithPlayerDamage, collWithBulletDamage;
+    protected boolean isActive;
 
     protected Image sprite;
-    private Notification notif;
+    protected Notification notif;
 
     public Enemy(){
         
@@ -73,7 +72,8 @@ public class Enemy extends JPanel {
 
             y = y + dy;
 
-            if(y == 600){
+            if(y >= 600){
+                // System.out.println("Out of bounds. Deactivating...");
                 deactivate();
             }
 
@@ -106,7 +106,7 @@ public class Enemy extends JPanel {
 
     }
 
-    private void intersectsPlayer(){
+    protected void intersectsPlayer(){
         Rectangle2D.Double playerBounds = PlayerTracker.instance.getPlayerBounds();
         Rectangle2D.Double enemyBounds = getBoundingRect();
 

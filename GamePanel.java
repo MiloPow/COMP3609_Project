@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -12,26 +11,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import javax.swing.ImageIcon;
+// import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable{
     
-    private Image gameOverImage;
+    // private Image gameOverImage;
     private int frameCount;
-    private Enemy3Boss boss;
     private Thread gameThread;
     private Boolean isRunning;
     private BufferedImage bufferedImage;
     private Image bgImage;
-    private ScoreTracker scoreTracker;
+    // private ScoreTracker scoreTracker;
     private Player player;
-    private Notification notification;
-    private String levelLabel;
+    private Notification winLoseNotif;
 
     private ArrayList<Enemy> eList;
     private ArrayList<Enemy1> e1List;
     private ArrayList<Enemy2> e2List;
+    private Enemy3Boss boss;
     private ArrayList<Bullet> bList;
 
     private ArrayList<Integer> spawnPoints;
@@ -54,6 +52,7 @@ public class GamePanel extends JPanel implements Runnable{
         bgImage = new ImageIcon("Images/bg.png").getImage();
         bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         player = new Player(347, 400, this);
+        winLoseNotif = new Notification();
 
         PlayerTracker.instance.registerPlayer(player);
 
@@ -63,8 +62,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         for(int i = 0;i < playerBullets.size();i++)
             bList.add(playerBullets.get(i));
-
-        levelLabel = "Get 5000 Points";
 
         initSpawnPoints();
 
@@ -143,7 +140,6 @@ public class GamePanel extends JPanel implements Runnable{
         waveIndex++;
 
         if(waveQueue.size() == 0 || waveIndex >= waveQueue.size()){
-            // System.out.println("waveQueue Empty");
             return;
         }
 
@@ -159,6 +155,10 @@ public class GamePanel extends JPanel implements Runnable{
                 Enemy e = e2List.get(i);
                 e.activate(spawnPoints.get(i), -36);
             }
+            else if(activeWave.get(i) == 3){
+                boss.activate(300, 10);
+                
+            }
 
         }
 
@@ -169,6 +169,7 @@ public class GamePanel extends JPanel implements Runnable{
         eList = new ArrayList<Enemy>();
         e1List = new ArrayList<Enemy1>();
         e2List = new ArrayList<Enemy2>();
+        boss = new Enemy3Boss();
         
         for(int i = 0;i < spawnPoints.size();i++){
             // Enemy1 e = new Enemy1();
@@ -181,7 +182,7 @@ public class GamePanel extends JPanel implements Runnable{
             bList.add(e2.getBullet());
         }
 
-        // WaveTracker.instance.registerEList(e1List);
+        eList.add(boss);
         EnemyTracker.instance.registerEList(eList);
     }
 
@@ -212,31 +213,23 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D imageContext = (Graphics2D)bufferedImage.getGraphics();
 
         imageContext.drawImage(bgImage, 0, 0, 1600, 1000, this);
-        // enemy1.draw(imageContext);
     
         drawBullets(imageContext);
-        if(ScoreTracker.score == 5001)
-        {
-            boss.draw(imageContext);
-        }
-        if(ScoreTracker.score == 5002)
-        {
-            notification = new Notification();
-            notification.drawGameOver(imageContext, "Images/YouWin.png");
-        }
+        
         drawEnemies(imageContext);
 
         player.draw(imageContext);
+        
+        
+        if(EnemyTracker.instance.wasBossKilled())
+        {
+            winLoseNotif.drawGameOver(imageContext, "Images/YouWin.png");
+        }
+
         if (Integer.parseInt(player.getHealth()) <= 0)
         {
             player.playerDie();
-            notification = new Notification();
-            notification.drawGameOver(imageContext, "Images/GameOver.png");
-        }
-        
-        if(ScoreTracker.score == 5001)
-        {
-            levelLabel = "Defeat The Boss!";
+            winLoseNotif.drawGameOver(imageContext, "Images/GameOver.png");
         }
 
         Font font = new Font("Courier", Font.PLAIN, 18);
@@ -245,9 +238,8 @@ public class GamePanel extends JPanel implements Runnable{
         imageContext.setFont(font);
         imageContext.drawString("Health: " + player.getHealth(), 10, 20);
         imageContext.drawString("Score: " + ScoreTracker.instance.getScore(), 10, 50);
-        imageContext.drawString(levelLabel, 650, 20);
         
-        imageFX.draw(imageContext);////////////////////////////////////////////////////////
+        imageFX.draw(imageContext);
         
         imageContext.dispose();
 
@@ -262,23 +254,8 @@ public class GamePanel extends JPanel implements Runnable{
         processInput();
 
         if(frameCount % 7 == 0){
-            // enemy1.move();
             moveEnemies();
             moveBullets();
-        }
-        if(ScoreTracker.score == 5000)
-        {
-            boss = new Enemy3Boss();
-            boss.activate(150,0);
-            ScoreTracker.score = 5001;
-        }
-        if(ScoreTracker.score == 5001)
-        {
-            boss.move(1);
-            if(boss.getHealth() <= 0)
-            {
-                boss.deactivate();
-            }
         }
         
         moveBullets();
@@ -320,12 +297,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void drawEnemies(Graphics2D imageContext){
-        for(int i = 0;i < e1List.size();i++){
-            e1List.get(i).draw(imageContext);
-        }
-        for(int i = 0;i < e2List.size();i++){
-            e2List.get(i).draw(imageContext);
-        }
+        for(int i = 0; i < eList.size();i++)
+            eList.get(i).draw(imageContext);
     }
 
     public void drawBullets(Graphics2D imageContext){
@@ -335,12 +308,8 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void moveEnemies(){
-        for(int i = 0;i < e1List.size();i++){
-            e1List.get(i).move();
-        }
-        for(int i = 0;i < e2List.size();i++){
-            e2List.get(i).move();
-        }
+        for(int i = 0; i < eList.size();i++)
+            eList.get(i).move();
     }
 
     public void moveBullets(){

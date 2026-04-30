@@ -55,11 +55,6 @@ public class DisappearFX implements ImageFX {
             green = (pixels[i] >> 8) & 255;
             blue = pixels[i] & 255;
 
-/*
-            newValue = blue | (green << 8) | (red << 16) | (alpha << 24);
-            pixels[i] = newValue;
-*/
-
                 
             if (a != 0) {
                 newValue = blue | (green << 8) | (red << 16) | (alpha << 24);

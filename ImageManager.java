@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
 
-/**
-   The ImageManager class manages the loading and processing of images.
-*/
 
 public class ImageManager {
       
