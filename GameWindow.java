@@ -74,6 +74,8 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER)
+            gamePanel.togglePause();
         gamePanel.keyPressed(e);
     }
 

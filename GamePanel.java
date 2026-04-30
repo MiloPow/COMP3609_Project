@@ -41,6 +41,8 @@ public class GamePanel extends JPanel implements Runnable{
     
     private DisappearFX imageFX;
 
+    private boolean isPaused;
+
     public GamePanel(){
         
         setBackground(Color.BLUE);
@@ -52,8 +54,10 @@ public class GamePanel extends JPanel implements Runnable{
         bgImage = new ImageIcon("Images/bg.png").getImage();
         bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         player = new Player(347, 400, this);
+        
         winLoseNotif = new Notification();
         levelLabelStr = "Level 1";
+        isPaused = false;
 
         PlayerTracker.instance.registerPlayer(player);
 
@@ -247,9 +251,51 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)getGraphics();
     
+        if(isPaused){
+            copyToGray();
+        }
+
         g2.drawImage(bufferedImage, 0, 0, this);
         g2.dispose();
     }
+
+	private int toGray (int pixel) {
+
+  		int alpha, red, green, blue, gray;
+		int newPixel;
+
+		alpha = (pixel >> 24) & 255;
+		red = (pixel >> 16) & 255;
+		green = (pixel >> 8) & 255;
+		blue = pixel & 255;
+
+		// Calculate the value for gray
+
+		gray = (red + green + blue) / 3;
+
+		// Set red, green, and blue channels to gray
+
+		red = green = blue = gray;
+
+		newPixel = blue | (green << 8) | (red << 16) | (alpha << 24);
+
+		return newPixel;
+	}
+
+
+	private void copyToGray() {
+		int imWidth = bufferedImage.getWidth();
+		int imHeight = bufferedImage.getHeight();
+
+    		int [] pixels = new int[imWidth * imHeight];
+    		bufferedImage.getRGB(0, 0, imWidth, imHeight, pixels, 0, imWidth);
+
+		for (int i=0; i<pixels.length; i++) {
+			pixels[i] = toGray(pixels[i]);
+		}
+  
+    		bufferedImage.setRGB(0, 0, imWidth, imHeight, pixels, 0, imWidth);
+	}
 
     public void update(){
         processInput();
@@ -274,12 +320,19 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
 
+    public void togglePause(){isPaused = !isPaused;}
+
     public void run(){
         int counter = 0;
         try{
             isRunning = true;
             while(isRunning){
-                update();
+
+                if(!isPaused)
+                    update();
+                else
+                    draw();
+                
                 Thread.sleep(2);
                 if(Integer.parseInt(player.getHealth()) <= 0)
                 {
