@@ -4,9 +4,7 @@ A basic Arcade shooter inspired game made with java swing. Features 4 way moveme
 
 ## Recent Changes
 
-- Implemented pause functionality
-
-- Implemented greyscale effect that activates when game is paused
+- Implemented parallax background with custom sprites
 
 ## To Do
 

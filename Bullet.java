@@ -22,7 +22,7 @@ public class Bullet extends JPanel {
         initialX = -10; initialY = 0;
         x = initialX; y = initialY;
         width = 8; height = 18;
-        dy = 4; dir=-1;
+        dy = 2; dir=-1;
         isActive = true;
 
     }

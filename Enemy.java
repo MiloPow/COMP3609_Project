@@ -17,7 +17,7 @@ public class Enemy extends JPanel {
     public Enemy(){
         
         this.x = initialX; this.y = initialY;
-        dy = 8;
+        dy = 1;
         width = 44; height = 36;
         initialX = -width; initialY = -height;
         x=initialX; y = initialY;

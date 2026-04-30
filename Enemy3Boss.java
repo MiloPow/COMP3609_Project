@@ -17,7 +17,7 @@ public class Enemy3Boss extends Enemy{
         initialX = -200; initialY=-200;
         this.x = initialX; this.y = initialY;
         
-        dx = 8;
+        dx = 2;
         dir = 1;
         this.maxHealth = 30;
         this.currHealth = this.maxHealth;

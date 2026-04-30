@@ -2,8 +2,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -21,7 +19,6 @@ public class GamePanel extends JPanel implements Runnable{
     private Thread gameThread;
     private Boolean isRunning;
     private BufferedImage bufferedImage;
-    private Image bgImage;
     // private ScoreTracker scoreTracker;
     private Player player;
     private Notification winLoseNotif;
@@ -43,6 +40,9 @@ public class GamePanel extends JPanel implements Runnable{
 
     private boolean isPaused;
 
+    private BackgroundLayer bgLayer1;
+    private BackgroundLayer bgLayer2;
+
     public GamePanel(){
         
         setBackground(Color.BLUE);
@@ -51,13 +51,17 @@ public class GamePanel extends JPanel implements Runnable{
 
         // Init Variables
         imageFX = new DisappearFX();
-        bgImage = new ImageIcon("Images/bg.png").getImage();
         bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         player = new Player(347, 400, this);
         
         winLoseNotif = new Notification();
         levelLabelStr = "Level 1";
         isPaused = false;
+
+        bgLayer1 = new BackgroundLayer();
+        bgLayer2 = new BackgroundLayer();
+
+        bgLayer2.setImage("Small Stars BG 2 Alt.png");
 
         PlayerTracker.instance.registerPlayer(player);
 
@@ -216,7 +220,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         Graphics2D imageContext = (Graphics2D)bufferedImage.getGraphics();
 
-        imageContext.drawImage(bgImage, 0, 0, 1600, 1000, this);
+        bgLayer1.draw(imageContext);
+        bgLayer2.draw(imageContext);
     
         drawBullets(imageContext);
         
@@ -300,11 +305,17 @@ public class GamePanel extends JPanel implements Runnable{
     public void update(){
         processInput();
 
+
         if(frameCount % 7 == 0){
-            moveEnemies();
-            moveBullets();
+            bgLayer2.move();
+        }
+
+        if(frameCount % 3 == 0){
+            bgLayer1.move();
         }
         
+        moveEnemies();
+        moveBullets();
         moveBullets();
         draw();
         updateFrameCount();
@@ -338,7 +349,6 @@ public class GamePanel extends JPanel implements Runnable{
                 {
                     counter = counter + 1;
                     Graphics2D imageContext = (Graphics2D)bufferedImage.getGraphics();
-                    imageContext.drawImage(bgImage, 0, 0, 1600, 1000, this);
                     imageFX.draw(imageContext);
                     imageFX.update();
                     if (counter > 120)
