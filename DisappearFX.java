@@ -1,16 +1,11 @@
-import java.util.Random;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
-import javax.swing.JPanel;
 import java.awt.image.BufferedImage;
 
 public class DisappearFX implements ImageFX {
 
     private static final int WIDTH = 1000;        // width of the image
     private static final int HEIGHT = 1000;        // height of the image
-    private static final int YPOS = 0;        // vertical position of the image
-
-    private GamePanel panel;
 
     private int x;
     private int y;

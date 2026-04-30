@@ -5,9 +5,9 @@ import javax.swing.ImageIcon;
 
 public class Enemy3Boss extends Enemy{
 
-    private EnemyBullet eBullet;
+    // private EnemyBullet eBullet;
 
-    private int spawnY;
+    // private int spawnY;
     private int dx, dir;
     private boolean killed;
 
@@ -25,7 +25,7 @@ public class Enemy3Boss extends Enemy{
         this.setScoreValue(1000);
 
         width = 200; height = 200;
-        spawnY = 0;
+        // spawnY = 0;
         collHealthReduction = 10; // Damage done to player
         collWithPlayerDamage = this.maxHealth;
     }

@@ -4,17 +4,7 @@ A basic Arcade shooter inspired game made with java swing. Features 4 way moveme
 
 ## Recent Changes
 
-- Reimplimented 4 way movement
-
-- Optimised the game over and victory notifications such that one isn't created every frame
-
-- Added boss to EnemyLayout.txt so it would be read and spawned just like most enemies
-
-- Readjusted player speed
-
-- Optimised draw and move functions for enemies in GamePanel.java
-
-- Removed unecessary comments and debug print statements
+- Removed unecessary code to avoid warnings
 
 ## To Do
 
