@@ -13,6 +13,8 @@ public class Bullet extends JPanel {
     protected Image sprite;
     private boolean isActive;
 
+    private SoundManager soundManager;
+
     // Bullets spawn out of screen and require activation to move. The player should only be able to activate 3 bullets at once
 
     public Bullet(){
@@ -24,6 +26,8 @@ public class Bullet extends JPanel {
         width = 8; height = 18;
         dy = 2; dir=-1;
         isActive = true;
+
+        soundManager = new SoundManager();
 
     }
 
@@ -42,11 +46,6 @@ public class Bullet extends JPanel {
 
         if(isOutOfBounds() && isActive){
             deactivate();
-            // System.out.println("Out of bounds and active. Deactivating...");
-            // x = initialX;
-            // y = initialY;
-            // isActive = false;
-            // System.out.println("X: " + Integer.toString(x) + " Y: " + Integer.toString(y));
         }
 
     }
@@ -54,6 +53,8 @@ public class Bullet extends JPanel {
     public void activate(int x, int y){
         this.x = x; this.y = y;
         isActive = true;
+
+        soundManager.playClip("shoot");
     }
 
     public void deactivate(){

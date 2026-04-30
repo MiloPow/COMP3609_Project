@@ -19,6 +19,8 @@ public class Player extends JPanel{
     private ArrayList<PlayerBullet> bullets;
     private int bulletAmount;
 
+    private SoundManager soundManager;
+
     public Player(int x, int y, JPanel parentPanel){
 
         setPreferredSize(new Dimension(50, 50));
@@ -30,6 +32,8 @@ public class Player extends JPanel{
         width = 60; height = 40;
         dx = 3; dy = 3;
         health = 20;
+
+        soundManager = new SoundManager();
 
         initBullets();
 
@@ -140,8 +144,10 @@ public class Player extends JPanel{
 
             Rectangle2D.Double enemyBounds = enemyBoundsList.get(i);
 
-            if(playerBounds.intersects(enemyBounds))
+            if(playerBounds.intersects(enemyBounds)){
                 System.out.println("Enemy collided with player");
+                soundManager.playClip("hit");
+            }
 
         }
 

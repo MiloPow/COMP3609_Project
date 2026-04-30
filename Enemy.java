@@ -14,6 +14,8 @@ public class Enemy extends JPanel {
     protected Image sprite;
     protected Notification notif;
 
+    private SoundManager soundManager;
+
     public Enemy(){
         
         this.x = initialX; this.y = initialY;
@@ -31,6 +33,7 @@ public class Enemy extends JPanel {
 
         sprite = new ImageIcon("Images/Enemy 1.png").getImage();
         notif = new Notification();
+        soundManager = new SoundManager();
 
     }
 
@@ -112,6 +115,8 @@ public class Enemy extends JPanel {
 
         if(enemyBounds.intersects(playerBounds)){
 
+            soundManager.playClip("hit");
+
             PlayerTracker.instance.updatePlayerHealth(-collHealthReduction);
 
             currHealth = currHealth - collWithPlayerDamage;
@@ -129,6 +134,7 @@ public class Enemy extends JPanel {
 
             if(enemyBounds.intersects(bulletBounds)){
 
+                soundManager.playClip("hit");
 
                 bullet.deactivate();
                 

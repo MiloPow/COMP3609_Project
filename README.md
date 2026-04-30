@@ -4,7 +4,7 @@ A basic Arcade shooter inspired game made with java swing. Features 4 way moveme
 
 ## Recent Changes
 
-- Implemented parallax background with custom sprites
+- Implemented sound effects
 
 ## To Do
 
