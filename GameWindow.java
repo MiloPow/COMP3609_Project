@@ -1,6 +1,4 @@
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.Color;
@@ -17,15 +15,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener{
     JPanel mainPanel;
 
     private HashMap<String, Boolean> keysHeld;
-
-    JPanel infoPanel;
-        JLabel healthLabel;
-        JLabel enemyLabel;
-
-    JPanel buttPanel;
-        JButton startButt;
-        JButton pauseButt;
-        JButton quitButt;
     
     GamePanel gamePanel;
 
@@ -36,8 +25,6 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener{
         setSize(800, 600);
         setLocationRelativeTo(null);
         setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        // setLayout(new OverlayLayout(getContentPane()));
-        // setLayout(null);
         getContentPane().setBackground(Color.BLACK);
         setResizable(false);
 
@@ -88,12 +75,10 @@ public class GameWindow extends JFrame implements ActionListener, KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         gamePanel.keyPressed(e);
-        // gamePanel.toggleKeyHeld(e);
     }
 
     public void keyReleased(KeyEvent e) {
         gamePanel.keyReleased(e);
-        // gamePanel.toggleKeyHeld(e);
     }
 
 }

@@ -4,7 +4,9 @@ A basic Arcade shooter inspired game made with java swing. Features 4 way moveme
 
 ## Recent Changes
 
-- Removed unecessary code to avoid warnings
+- Reimplemented level label
+
+- Removed unecessary variables in GameWindow.java and other unecessary comments/code throughout
 
 ## To Do
 

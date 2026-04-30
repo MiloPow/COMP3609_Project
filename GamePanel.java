@@ -25,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable{
     // private ScoreTracker scoreTracker;
     private Player player;
     private Notification winLoseNotif;
+    private String levelLabelStr;
 
     private ArrayList<Enemy> eList;
     private ArrayList<Enemy1> e1List;
@@ -43,7 +44,6 @@ public class GamePanel extends JPanel implements Runnable{
     public GamePanel(){
         
         setBackground(Color.BLUE);
-        // setPreferredSize(new Dimension(785, 525));
         setPreferredSize(new Dimension(800, 600));
         setLayout(null);
 
@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable{
         bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         player = new Player(347, 400, this);
         winLoseNotif = new Notification();
+        levelLabelStr = "Level 1";
 
         PlayerTracker.instance.registerPlayer(player);
 
@@ -172,7 +173,6 @@ public class GamePanel extends JPanel implements Runnable{
         boss = new Enemy3Boss();
         
         for(int i = 0;i < spawnPoints.size();i++){
-            // Enemy1 e = new Enemy1();
             Enemy1 e1 = new Enemy1();
             Enemy2 e2 = new Enemy2();
             e1List.add(e1);
@@ -238,6 +238,7 @@ public class GamePanel extends JPanel implements Runnable{
         imageContext.setFont(font);
         imageContext.drawString("Health: " + player.getHealth(), 10, 20);
         imageContext.drawString("Score: " + ScoreTracker.instance.getScore(), 10, 50);
+        imageContext.drawString(levelLabelStr, 10, 550);
         
         imageFX.draw(imageContext);
         
@@ -267,6 +268,9 @@ public class GamePanel extends JPanel implements Runnable{
         if(enemiesInactive() && waveIndex < waveQueue.size()){
             activateWave();
         }
+
+        if(waveIndex == waveQueue.size())
+            levelLabelStr = "Level 2";
 
     }
 
