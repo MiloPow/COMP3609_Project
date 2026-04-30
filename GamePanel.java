@@ -191,6 +191,7 @@ public class GamePanel extends JPanel implements Runnable{
         }
 
         eList.add(boss);
+        bList.add(boss.getBullet());
         EnemyTracker.instance.registerEList(eList);
     }
 

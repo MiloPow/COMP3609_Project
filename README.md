@@ -4,14 +4,8 @@ A basic Arcade shooter inspired game made with java swing. Features 4 way moveme
 
 ## Recent Changes
 
-- Implemented sound effects
+- Implemented boss attackes
 
-## To Do
+- Readjusted Boss sprite
 
-- Add various features taught in course, including:
-  -  Sound
-  -  Parallax Background
-
-- Add pause functionality
-
-- Optimise code (remove redundancies and minimise code smells)
+- Implemented sounds for hitting the boss

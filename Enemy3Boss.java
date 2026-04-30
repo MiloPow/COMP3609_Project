@@ -11,6 +11,10 @@ public class Enemy3Boss extends Enemy{
     private int dx, dir;
     private boolean killed;
 
+    private EnemyBullet eBullet;
+
+    private SoundManager soundManager;
+
     public Enemy3Boss(){ // Needs health
         super();
         killed = false;
@@ -24,11 +28,16 @@ public class Enemy3Boss extends Enemy{
         this.sprite = new ImageIcon("Images/Boss.png").getImage();
         this.setScoreValue(1000);
 
-        width = 200; height = 200;
+        width = 82*3; height = 51*3;
         // spawnY = 0;
         collHealthReduction = 10; // Damage done to player
         collWithPlayerDamage = this.maxHealth;
+
+        eBullet = new EnemyBullet();
+        soundManager = new SoundManager();
     }
+
+    public EnemyBullet getBullet(){return eBullet;}
 
     public boolean getKilled(){return killed;}
 
@@ -39,7 +48,7 @@ public class Enemy3Boss extends Enemy{
 
             x = x + (dx * dir);
 
-            if(x <= 0 || x >= 600)
+            if(x <= 0 || x >= 550)
                 dir = dir * -1;
 
             intersectsPlayer();
@@ -48,6 +57,9 @@ public class Enemy3Boss extends Enemy{
         }
         
         notif.move();
+
+        if(x % 200 == 0 && isActive)
+            eBullet.activate(x+100, y+100);
     }
 
     @Override
@@ -70,12 +82,15 @@ public class Enemy3Boss extends Enemy{
 
             if(enemyBounds.intersects(bulletBounds)){
 
+                if(currHealth > 0)
+                    soundManager.playClip("hit");
 
                 bullet.deactivate();
                 
                 currHealth = currHealth - collWithBulletDamage;
 
                 if(currHealth <= 0){
+                    soundManager.playClip("explosion");
                     killed = true;
                     notif.activate(x, y);
                     ScoreTracker.instance.increaseScore(scoreValue);
