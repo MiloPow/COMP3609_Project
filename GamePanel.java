@@ -1,8 +1,10 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,14 +17,16 @@ import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable{
     
+    private Image gameOverImage;
     private int frameCount;
-
+    private Enemy3Boss boss;
     private Thread gameThread;
     private Boolean isRunning;
     private BufferedImage bufferedImage;
     private Image bgImage;
-
+    private ScoreTracker scoreTracker;
     private Player player;
+    private Notification notification;
     private String levelLabel;
 
     private ArrayList<Enemy> eList;
@@ -35,16 +39,18 @@ public class GamePanel extends JPanel implements Runnable{
     private int waveIndex;
 
     private HashMap<String, Boolean> keysHeld;
+    
+    private DisappearFX imageFX;
 
     public GamePanel(){
-
+        
         setBackground(Color.BLUE);
         // setPreferredSize(new Dimension(785, 525));
         setPreferredSize(new Dimension(800, 600));
         setLayout(null);
 
         // Init Variables
-
+        imageFX = new DisappearFX();
         bgImage = new ImageIcon("Images/bg.png").getImage();
         bufferedImage = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
         player = new Player(347, 400, this);
@@ -58,7 +64,7 @@ public class GamePanel extends JPanel implements Runnable{
         for(int i = 0;i < playerBullets.size();i++)
             bList.add(playerBullets.get(i));
 
-        levelLabel = "Level: 1";
+        levelLabel = "Get 5000 Points";
 
         initSpawnPoints();
 
@@ -163,7 +169,7 @@ public class GamePanel extends JPanel implements Runnable{
         eList = new ArrayList<Enemy>();
         e1List = new ArrayList<Enemy1>();
         e2List = new ArrayList<Enemy2>();
-
+        
         for(int i = 0;i < spawnPoints.size();i++){
             // Enemy1 e = new Enemy1();
             Enemy1 e1 = new Enemy1();
@@ -206,13 +212,32 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D imageContext = (Graphics2D)bufferedImage.getGraphics();
 
         imageContext.drawImage(bgImage, 0, 0, 1600, 1000, this);
-
         // enemy1.draw(imageContext);
-
+    
         drawBullets(imageContext);
+        if(ScoreTracker.score == 5001)
+        {
+            boss.draw(imageContext);
+        }
+        if(ScoreTracker.score == 5002)
+        {
+            notification = new Notification();
+            notification.drawGameOver(imageContext, "Images/YouWin.png");
+        }
         drawEnemies(imageContext);
 
         player.draw(imageContext);
+        if (Integer.parseInt(player.getHealth()) <= 0)
+        {
+            player.playerDie();
+            notification = new Notification();
+            notification.drawGameOver(imageContext, "Images/GameOver.png");
+        }
+        
+        if(ScoreTracker.score == 5001)
+        {
+            levelLabel = "Defeat The Boss!";
+        }
 
         Font font = new Font("Courier", Font.PLAIN, 18);
 
@@ -220,14 +245,16 @@ public class GamePanel extends JPanel implements Runnable{
         imageContext.setFont(font);
         imageContext.drawString("Health: " + player.getHealth(), 10, 20);
         imageContext.drawString("Score: " + ScoreTracker.instance.getScore(), 10, 50);
-        imageContext.drawString(levelLabel, 700, 20);
-
+        imageContext.drawString(levelLabel, 650, 20);
+        
+        imageFX.draw(imageContext);////////////////////////////////////////////////////////
+        
         imageContext.dispose();
+
 
         Graphics2D g2 = (Graphics2D)getGraphics();
     
         g2.drawImage(bufferedImage, 0, 0, this);
-
         g2.dispose();
     }
 
@@ -239,9 +266,22 @@ public class GamePanel extends JPanel implements Runnable{
             moveEnemies();
             moveBullets();
         }
-
+        if(ScoreTracker.score == 5000)
+        {
+            boss = new Enemy3Boss();
+            boss.activate(150,0);
+            ScoreTracker.score = 5001;
+        }
+        if(ScoreTracker.score == 5001)
+        {
+            boss.move(1);
+            if(boss.getHealth() <= 0)
+            {
+                boss.deactivate();
+            }
+        }
+        
         moveBullets();
-
         draw();
         updateFrameCount();
 
@@ -254,11 +294,24 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void run(){
+        int counter = 0;
         try{
             isRunning = true;
             while(isRunning){
                 update();
                 Thread.sleep(2);
+                if(Integer.parseInt(player.getHealth()) <= 0)
+                {
+                    counter = counter + 1;
+                    Graphics2D imageContext = (Graphics2D)bufferedImage.getGraphics();
+                    imageContext.drawImage(bgImage, 0, 0, 1600, 1000, this);
+                    imageFX.draw(imageContext);
+                    imageFX.update();
+                    if (counter > 120)
+                    {
+                        isRunning = false;
+                    }
+                }
             }
         }
         catch(Exception e){

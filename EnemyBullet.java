@@ -8,7 +8,7 @@ public class EnemyBullet extends Bullet{
         super();
         this.sprite = new ImageIcon("Images/Enemy Bullet.png").getImage();
         this.dir = 1;
-        dy = 2;
+        dy = 8;
     }
 
     private void intersectsPlayer(){

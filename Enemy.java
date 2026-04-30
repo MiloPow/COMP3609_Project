@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 
 public class Enemy extends JPanel {
     
-    private int initialX, initialY, dy;
+    private int initialX, initialY ,dx = 1, dy;
     protected int x, y, width, height, scoreValue, collHealthReduction, currHealth, maxHealth, collWithPlayerDamage, collWithBulletDamage;
     private boolean isActive;
 
@@ -18,7 +18,7 @@ public class Enemy extends JPanel {
     public Enemy(){
         
         this.x = initialX; this.y = initialY;
-        dy = 2;
+        dy = 8;
         width = 44; height = 36;
         initialX = -width; initialY = -height;
         x=initialX; y = initialY;
@@ -75,6 +75,26 @@ public class Enemy extends JPanel {
 
             if(y == 600){
                 deactivate();
+            }
+
+            intersectsPlayer();
+
+
+        }
+
+        notif.move();
+
+    }
+    
+    public void move(int type){
+        if(isActive){
+            x = x + dx;
+
+            if(x > 600){
+                dx = -1;
+            }
+            if(x < 0){
+                dx = 1;
             }
 
             intersectsPlayer();

@@ -28,7 +28,7 @@ public class Player extends JPanel{
 
         this.x = x; this.y = y;
         width = 60; height = 40;
-        dx = 1; dy = 1;
+        dx = 8; dy = 2;
         health = 20;
 
         initBullets();
@@ -86,37 +86,42 @@ public class Player extends JPanel{
     public ArrayList<PlayerBullet> getBullets(){return bullets;}
 
     public String getHealth(){return Integer.toString(health);}
-
+    
+    public void playerDie()
+    {
+        sprite = new ImageIcon("Images/explosion.gif").getImage();
+    }
     public void draw(Graphics2D g2){
 
         g2.drawImage(sprite, x, y, width, height, this);
 
         // intersectsWithEnemy(); // Should really put into an update function
-
     }
 
     public void move(String dir){
-        if(dir.equals("left")){
+        if(health > 0)
+        {
+            if(dir.equals("left")){
             x = x - dx;
             if(x < 5)
                 x = 5;
+            }
+            else if(dir.equals("right")){
+                x = x + dx;
+                if((x + width) > 790)
+                    x = 790 - width;
+            }
+            /*else if(dir.equals("up")){
+                y = y - dy;
+                if(y < 0)
+                    y = 0;
+            }
+            else if(dir.equals("down")){
+                y = y + dy;
+                if((y + height) > 560)
+                    y = 560 - height;
+            }*/
         }
-        else if(dir.equals("right")){
-            x = x + dx;
-            if((x + width) > 790)
-                x = 790 - width;
-        }
-        else if(dir.equals("up")){
-            y = y - dy;
-            if(y < 0)
-                y = 0;
-        }
-        else if(dir.equals("down")){
-            y = y + dy;
-            if((y + height) > 560)
-                y = 560 - height;
-        }
-
     }
 
     public void intersectsWithEnemy(){
